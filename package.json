@@ -1,0 +1,19 @@
+{
+  "name": "bitcoin-rpc-promise-retry",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bitcoind-rpc": "^0.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "James Cramer",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simpleledger/bitcoin-rpc-promise.git"
+  }
+}
