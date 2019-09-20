@@ -11,13 +11,13 @@ function RpcClient(url, options) {
 
   if(options) {
     if(options.maxRetries)
-      config.maxRetries = maxRetries;
+      config.maxRetries = options.maxRetries;
     if(options.retryDelayMs)
-      config.retryDelayMs = retryDelayMs;
+      config.retryDelayMs = options.retryDelayMs;
     if(options.logger)
-      config.logger = logger;
+      config.logger = options.logger;
     if(options.timeoutMs)
-      config.timeoutMs = timeoutMs;
+      config.timeoutMs = options.timeoutMs;
   }
 
   const {
