@@ -3,7 +3,7 @@
 const RpcClientBase = require('bitcoind-rpc');
 const { promisify } = require('util');
 const URL = require('url').URL; 
-const config = { maxRetries: 5, retryDelayMs: 100, logger: console, timeoutMs: 5000 };
+const config = { maxRetries: 0, retryDelayMs: 100, logger: console, timeoutMs: 5000 };
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 function RpcClient(url, options) {
@@ -11,13 +11,13 @@ function RpcClient(url, options) {
 
   if(options) {
     if(options.maxRetries)
-      config.maxRetries = options.maxRetries;
+      config.maxRetries = options.maxRetries;        // number of retries before throwing an exception (default: 5)
     if(options.retryDelayMs)
-      config.retryDelayMs = options.retryDelayMs;
+      config.retryDelayMs = options.retryDelayMs;    // delay between each retry (default: 100ms)
     if(options.logger)
-      config.logger = options.logger;
+      config.logger = options.logger;                // setup logger (default: console)
     if(options.timeoutMs)
-      config.timeoutMs = options.timeoutMs;
+      config.timeoutMs = options.timeoutMs;          // max timeout for each retry
   }
 
   const {
@@ -43,12 +43,12 @@ for (const key of Object.keys(RpcClientBase.callspec)) {
   const fn = promisify(RpcClientBase.prototype[key]);
 
   RpcClient.prototype[key] = async function() {
-    for(let i = 0; i < config.maxRetries; i++) {
+    for(let i = 0; i <= config.maxRetries; i++) {
       try {
         const timeout = new Promise((resolve, reject) => {
           let id = setTimeout(() => {
             clearTimeout(id);
-            reject('Timed out in '+ config.timeoutMs + 'ms.')
+            reject('Timed out in '+ config.timeoutMs + 'ms.');
           }, config.timeoutMs)
         })
         const { result } = await Promise.race([ Reflect.apply(fn, this, arguments), timeout ]);
